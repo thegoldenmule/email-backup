@@ -33,3 +33,12 @@ ebexporter.py
 ![Usage](ebexporterUsage.png)
 
 The exporter accepts a directory output from `ebackup`, and compiles the messages into an ordered `Mailbox` file. It also outputs a compressed (zip) archive.
+
+But why doesn't...
+=
+
+**...`ebackup` just add new messages to a single `mbox` file to begin with?** Because a giant `mbox` file is harder to work with. You would have to parse the whole file to do simple queries (where are my emails from December?). You could not peruse and open messages easily. Because this is simpler.
+
+**...`ebackup` use `FLAGS`?** `FLAGS` are not something my little python script has complete control over.
+
+**...something else?** If you have a suggestion, I'd love to hear it.
