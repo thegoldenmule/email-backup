@@ -6,23 +6,12 @@ import ebdatabase
 import argparse
 
 
-verbose = False
-
-
-def disablelogs():
-    verbose = False
-
-
-def enablelogs():
-    verbose = True
-
 parser = argparse.ArgumentParser(description='Designed to run periodically, and backup email.')
 
 parser.add_argument('--email', '-e', required=True, nargs=1, type=str, help='Email address, only IMAPv4 currently supported.')
 parser.add_argument('--password', '-p', required=True, nargs=1, type=str, help='Account password.')
 parser.add_argument('--imap', '-i', required=True, nargs=1, type=str, help='IMAP uri, eg - imap.gmail.com.')
 parser.add_argument('--output', '-o', nargs=1, default='.', type=str, help='Output directory, defaults to the current directory.')
-parser.add_argument('--verbose', action='store_const', const=enablelogs, default=disablelogs, help='Enables verbose logging.')
 
 args = vars(parser.parse_args())
 
@@ -56,8 +45,7 @@ ids = data[0].split()
 errors = []
 written = 0
 
-if verbose:
-    print 'Retrieved {} headers.'.format(str(len(ids)))
+print 'Retrieved {} headers.'.format(str(len(ids)))
 
 while len(ids) > 0:
     id = ids.pop(0)
@@ -81,13 +69,12 @@ while len(ids) > 0:
             print errorMsg
             errors.append(errorMsg)
         else:
-            path = ebfunc.write_message(path, message)
+            path = ebfunc.write_message(output, message)
 
             if path is not None:
                 db.add(id, path)
 
-            if verbose:
-                print 'Added message {}.'.format(str(id))
+            print 'Added message {}.'.format(str(id))
 
             written += 1
 
@@ -97,5 +84,4 @@ with open('log.txt', 'w') as f:
         f.write(errorMsg)
         f.write('\n')
 
-if verbose:
-    print '{} new emails written.'.format(written)
+print '{} new emails written.'.format(written)
