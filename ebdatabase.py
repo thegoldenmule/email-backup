@@ -21,12 +21,12 @@ class Database:
         with open(self._path, 'rb') as rf:
             for line in rf:
                 if line.split()[0] == ':version':
-                    continue;
+                    continue
 
                 (uid, p) = line.split()
 
                 if uid in self._map:
-                    print 'Corrupt database file, attempting recover.';
+                    print 'Corrupt database file, attempting recover.'
                 else:
                     self._map[uid] = p
 
