@@ -38,20 +38,20 @@ ebackup.py
 
 `ebackup` supports any host with `IMAPv4` access.
 
-![Usage](ebackupUsage.png)
+![Usage](images/ebackupUsage.png)
 
 The script will download only new messages by keeping track locally of which messages it has already downloaded. It does not use imap `FLAGS` to get around various issues with different imap providers.
 
 Each message will be written to a distinct flat file. The directory structure is `[year]/[month]/[day]/[hour].[minute].[second].message`.
 
-![Hierarchy](ebackupHierarchy.png)
+![Hierarchy](images/ebackupHierarchy.png)
 
 ebexporter.py
 =
 
 `ebexporter` is useful to compile all emails into a single `.mbox` file, which compresses nicely.
 
-![Usage](ebexporterUsage.png)
+![Usage](images/ebexporterUsage.png)
 
 The exporter accepts a directory output from `ebackup`, and compiles the messages into an ordered `Mailbox` file. It also outputs a compressed (zip) archive.
 
@@ -62,13 +62,13 @@ These scripts should be run periodically. On Linux and Unix, users can set up sc
 
 **1.** Open Task Scheduler.
 
-![Task Scheduler](TaskScheduler.png)
+![Task Scheduler](images/TaskScheduler.png)
 
 **2.** Copy `ebtask_example.bat` to `ebtask.bat` (which is already ignored by the `.gitignore`).
 
 **3.** Fill in various variables.
 
-![BAT](TaskBat.png)
+![BAT](images/TaskBat.png)
 
 **4.** In Task Scheduler, schedule `ebtask.bat` to run on whatever schedule you choose.
 
