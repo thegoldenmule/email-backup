@@ -12,6 +12,7 @@ verbose = False
 def disablelogs():
     verbose = False
 
+
 def enablelogs():
     verbose = True
 
