@@ -6,24 +6,37 @@ import ebdatabase
 import argparse
 
 
-parser = argparse.ArgumentParser(description='For archiving email.')
-parser.add_argument('email', metavar='EMAIL', type=str, help='Email address, only gmail currently supported.')
-parser.add_argument('password', metavar='PASSWORD', type=str, help='Account password.')
-parser.add_argument('path', metavar='PATH', type=str, help='Output directory.')
+verbose = False
+
+
+def disablelogs():
+    verbose = False
+
+def enablelogs():
+    verbose = True
+
+parser = argparse.ArgumentParser(description='Designed to run periodically, and backup email.')
+
+parser.add_argument('--email', '-e', required=True, nargs=1, type=str, help='Email address, only IMAPv4 currently supported.')
+parser.add_argument('--password', '-p', required=True, nargs=1, type=str, help='Account password.')
+parser.add_argument('--imap', '-i', required=True, nargs=1, type=str, help='IMAP uri, eg - imap.gmail.com.')
+parser.add_argument('--output', '-o', nargs=1, default='.', type=str, help='Output directory, defaults to the current directory.')
+parser.add_argument('--verbose', action='store_const', const=enablelogs, default=disablelogs, help='Enables verbose logging.')
 
 args = vars(parser.parse_args())
 
-email = args['email']
-password = args['password']
-path = args['path'] + os.sep + email
+email = args['email'][0]
+password = args['password'][0]
+imap = args['imap'][0]
+output = args['output'][0] + os.sep + email
 
 ids = []
 
 # load database
-db = ebdatabase.Database(path)
+db = ebdatabase.Database(output)
 
 # connect
-mail = imaplib.IMAP4_SSL('imap.gmail.com')
+mail = imaplib.IMAP4_SSL(imap)
 
 try:
     mail.login(email, password)
@@ -42,7 +55,8 @@ ids = data[0].split()
 errors = []
 written = 0
 
-print 'Retrieved {} headers.'.format(str(len(ids)))
+if verbose:
+    print 'Retrieved {} headers.'.format(str(len(ids)))
 
 while len(ids) > 0:
     id = ids.pop(0)
@@ -71,7 +85,8 @@ while len(ids) > 0:
             if path is not None:
                 db.add(id, path)
 
-            print 'Added message {}.'.format(str(id))
+            if verbose:
+                print 'Added message {}.'.format(str(id))
 
             written += 1
 
@@ -81,4 +96,5 @@ with open('log.txt', 'w') as f:
         f.write(errorMsg)
         f.write('\n')
 
-print '{} new emails written.'.format(written)
+if verbose:
+    print '{} new emails written.'.format(written)
