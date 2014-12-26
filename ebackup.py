@@ -79,7 +79,7 @@ while len(ids) > 0:
             written += 1
 
 
-with open('log.txt', 'w') as f:
+with open(output + os.sep + 'log.txt', 'w') as f:
     for errorMsg in errors:
         f.write(errorMsg)
         f.write('\n')
