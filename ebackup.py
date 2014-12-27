@@ -42,7 +42,7 @@ if result != 'OK':
     exit()
 
 ids = data[0].split()
-errors = []
+logs = []
 written = 0
 
 print 'Retrieved {} headers.'.format(str(len(ids)))
@@ -56,18 +56,12 @@ while len(ids) > 0:
     (fetchResult, fetchData) = mail.uid('fetch', id, '(RFC822)')
 
     if fetchResult != 'OK':
-        errorMsg = '{} fetch error : {} : {}.'.format(str(id), fetchResult, fetchData)
-
-        print errorMsg
-        errors.append(errorMsg)
+        print '{} fetch error : {} : {}.'.format(str(id), fetchResult, fetchData)
     else:
         message = ebfunc.to_message(fetchData[0][1])
 
         if message is None:
-            errorMsg = '{} parse error.'.format(str(id))
-
-            print errorMsg
-            errors.append(errorMsg)
+            print '{} parse error.'.format(str(id))
         else:
             path = ebfunc.write_message(output, message)
 
@@ -76,12 +70,12 @@ while len(ids) > 0:
 
             print 'Added message {}.'.format(str(id))
 
+            logs.append(str(id))
+
             written += 1
 
 
 with open(output + os.sep + 'log.txt', 'w') as f:
-    for errorMsg in errors:
-        f.write(errorMsg)
-        f.write('\n')
+    f.write('\n'.join((log for log in logs)))
 
 print '{} new emails written.'.format(written)

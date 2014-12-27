@@ -1,13 +1,10 @@
 import os
-
+import datetime
 import ebfunc
 
 
 # Keeps track of all email.
 class Database:
-    # version string appended to db file -- not used at the moment
-    __version = '0.1.0'
-
     def __init__(self, account):
         self.account = account.strip(os.sep)
 
@@ -15,16 +12,21 @@ class Database:
         if not os.path.exists(account):
             os.makedirs(account)
 
-        # create database if one doesn't exist
+        # this is where we write the last update string
+        self._versionPosition = 0
+
+        # create file if need be
         if not os.path.exists(self._path):
-            with open(self._path, 'wb') as wf:
-                wf.write(':version {}'.format(str(Database.__version)))
+            f = open(self._path, 'wb')
+            f.close()
 
         # read in values
         self._map = {}
         with open(self._path, 'rb') as rf:
             for line in rf:
-                if line.split()[0] == ':version':
+                # find last updated
+                if line.startswith(':'):
+                    self._versionPosition = rf.tell() - len(line)
                     continue
 
                 (uid, p) = line.split()
@@ -33,6 +35,9 @@ class Database:
                     print 'Corrupt database file, attempting recover.'
                 else:
                     self._map[uid] = p
+
+        if self._versionPosition == 0:
+            self._updateLastUpdated()
 
     # returns True if the database has a Message for the specified UID
     def contains(self, uid):
@@ -85,11 +90,19 @@ class Database:
         if uid in self._map:
             raise Exception('Entry for UID already exists.')
 
-        with open(self._path, 'ab') as wf:
-            # seek to the file's end
-            wf.seek(0, 2)
+        with open(self._path, 'r+b') as wf:
+            # begin writing on the last updated line
+            wf.seek(self._versionPosition)
 
-            wf.write('\n')
-            wf.write('{} {}'.format(str(uid), path))
+            wf.write('{} {}\n'.format(str(uid), path))
 
+            self._versionPosition = wf.tell()
+
+        self._updateLastUpdated()
         self._map[uid] = path
+
+    # updates the last updated field
+    def _updateLastUpdated(self):
+        with open(self._path, 'r+b') as wf:
+            wf.seek(self._versionPosition)
+            wf.write(': last updated {}\n'.format(datetime.datetime.utcnow()))
