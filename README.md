@@ -31,7 +31,7 @@ There are two main scripts for backing up email.
 
 `ebackup.py`, downloads a copy of new messages into a simple folder hierarchy with flat files.
 
-`ebexporter.py` can be used to create a single `.mbox` file and a compressed archive from this folder structure. 
+`ebexporter.py` can be used to create a single `.mbox` file from this folder structure. 
 
 ebackup.py
 =
@@ -49,11 +49,11 @@ Each message will be written to a distinct flat file. The directory structure is
 ebexporter.py
 =
 
-`ebexporter` is useful to compile all emails into a single `.mbox` file, which compresses nicely.
+`ebexporter` is useful to compile all emails into a single `.mbox` file.
 
 ![Usage](images/ebexporterUsage.png)
 
-The exporter accepts a directory output from `ebackup`, and compiles the messages into an ordered `Mailbox` file. It also outputs a compressed (zip) archive.
+The exporter accepts a directory output from `ebackup`, and compiles the messages into an ordered `Mailbox` file.
 
 How to install as scheduled task on Windows
 =

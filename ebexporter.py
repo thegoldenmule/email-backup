@@ -1,6 +1,5 @@
 import argparse
 import ebdatabase
-import zipfile
 
 parser = argparse.ArgumentParser(description='Exports ebackup archive as Mailbox (mbox) file.')
 
@@ -24,12 +23,3 @@ with open(output, 'wb') as wf:
         wf.writelines(rawMessage)
 
 print 'Mailbox written to {}.'.format(output)
-
-print 'Compressing Mailbox.'
-
-zippath = output + '.zip'
-
-with zipfile.ZipFile(zippath, 'w', allowZip64=True) as z:
-    z.write(output)
-
-print 'Compressed Mailbox written to {}.'.format(zippath)
