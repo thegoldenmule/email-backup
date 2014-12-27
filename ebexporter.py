@@ -20,6 +20,6 @@ print 'Writing Mailbox.'
 
 with open(output, 'wb') as wf:
     for rawMessage in messages:
-        wf.writelines(rawMessage)
+        wf.write(rawMessage)
 
 print 'Mailbox written to {}.'.format(output)

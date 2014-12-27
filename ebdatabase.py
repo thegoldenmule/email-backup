@@ -5,12 +5,13 @@ import ebfunc
 
 # Keeps track of all email.
 class Database:
-    def __init__(self, account):
-        self.account = account.strip(os.sep)
+    def __init__(self, basedir):
+        self.account = basedir.strip(os.sep)
 
-        self._path = account + os.sep + 'db.dat'
-        if not os.path.exists(account):
-            os.makedirs(account)
+        self._basepath = basedir
+        self._path = self._basepath + os.sep + 'db.dat'
+        if not os.path.exists(basedir):
+            os.makedirs(basedir)
 
         # this is where we write the last update string
         self._versionPosition = 0
@@ -51,6 +52,15 @@ class Database:
     def allRaw(self):
         return (self.rawMessageByUID(uid) for uid in sorted((uid for uid in self._map)))
 
+    # returns a path for a uid
+    def path(self, uid):
+        struid = str(uid)
+
+        if struid in self._map:
+            return self._map[struid]
+
+        return None
+
     # retrieves Message by UID
     def messageByUID(self, uid):
         struid = str(uid)
@@ -62,6 +72,8 @@ class Database:
 
     #  retrieves Message by path
     def messageByPath(self, path):
+        path = self._basepath + os.sep + path
+
         if os.path.exists(path):
             with open(path, 'rb') as rf:
                 return ebfunc.to_message(rf.read())
@@ -79,6 +91,8 @@ class Database:
 
     # retrieves raw message by path
     def rawMessageByPath(self, path):
+        path = self._basepath + os.sep + path
+
         if os.path.exists(path):
             with open(path, 'rb') as rf:
                 return rf.read()
@@ -94,6 +108,9 @@ class Database:
             # begin writing on the last updated line
             wf.seek(self._versionPosition)
 
+            # strip path to relative
+            path = os.path.relpath(path, self._basepath)
+
             wf.write('{} {}\n'.format(str(uid), path))
 
             self._versionPosition = wf.tell()
@@ -105,4 +122,4 @@ class Database:
     def _updateLastUpdated(self):
         with open(self._path, 'r+b') as wf:
             wf.seek(self._versionPosition)
-            wf.write(': last updated {}\n'.format(datetime.datetime.utcnow()))
+            wf.write(': last updated {}'.format(datetime.datetime.utcnow()))
