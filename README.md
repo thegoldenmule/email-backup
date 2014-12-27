@@ -20,7 +20,7 @@ Quickstart
 Motivation
 =
 
-**I wanted something simple**. I don't want hardware, I don't want to pay, I don't want a web service, I don't want an app for my phone-- I want 100 lines of easy-to-read, easy-to-debug code.
+**I wanted something simple**. I'm a crotchety old man in software-engineer years. I don't want hardware, I don't want to pay, I don't want a web service, I don't want an app for my phone-- I want 100 lines of easy-to-read, easy-to-debug code.
 
 This particular solution can be easily used with any backup solution. I use a local external backup drive and SpiderOak (which I highly recommend). Zero-knowledge remote backup is, I think, a pretty big deal.
 

@@ -40,11 +40,11 @@ class Database:
 
     # retrieves all Messages, sorted by uid
     def all(self):
-        return [self.messageByUID(uid) for uid in sorted((uid for uid in self._map))]
+        return (self.messageByUID(uid) for uid in sorted((uid for uid in self._map)))
 
     # retrieves all raw messages, sorted by uid
     def allRaw(self):
-        return [self.rawMessageByUID(uid) for uid in sorted((uid for uid in self._map))]
+        return (self.rawMessageByUID(uid) for uid in sorted((uid for uid in self._map)))
 
     # retrieves Message by UID
     def messageByUID(self, uid):
