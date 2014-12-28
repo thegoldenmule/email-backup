@@ -6,5 +6,5 @@ set EMAIL=[Email address]
 set PASSWORD=[Password (application specific password for gmail accounts)]
 set IMAP=[IMAP server address]
 
-%python% %BASE_DIR%\ebackup.py -e %EMAIL% -p %PASSWORD% -i %IMAP% -o %OUTPUT_DIR%
-%python% %BASE_DIR%\ebexporter.py -i %OUTPUT_DIR%\%EMAIL% -o %OUTPUT_DIR%\%EMAIL%\Archive.mbox
+%python% %BASE_DIR%\ebackup.py -e %EMAIL% -p %PASSWORD% -i %IMAP% -o %OUTPUT_DIR%\Git
+%python% %BASE_DIR%\ebarchiver.py -i %OUTPUT_DIR%\Git\%EMAIL% -o %OUTPUT_DIR%\Archives\%EMAIL%.zip
