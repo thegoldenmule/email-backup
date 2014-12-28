@@ -5,11 +5,14 @@ import ebfunc
 
 # Keeps track of all email.
 class Database:
-    def __init__(self, basedir):
-        self.account = basedir.strip(os.sep)
+    def __init__(self, basedir, **qwargs):
+        dbname = 'db.dat'
+        if 'dbname' in qwargs:
+            dbname = qwargs['dbname']
 
         self._basepath = basedir
-        self._path = self._basepath + os.sep + 'db.dat'
+        self._path = os.path.join(self._basepath, dbname)
+
         if not os.path.exists(basedir):
             os.makedirs(basedir)
 
@@ -44,16 +47,20 @@ class Database:
     def contains(self, uid):
         return uid in self._map
 
+    # returns all uids
+    def uids(self):
+        return sorted((uid for uid in self._map))
+
     # retrieves all Messages, sorted by uid
     def all(self):
-        return (self.messageByUID(uid) for uid in sorted((uid for uid in self._map)))
+        return (self.messageByUID(uid) for uid in self.uids())
 
     # retrieves all raw messages, sorted by uid
     def allRaw(self):
-        return (self.rawMessageByUID(uid) for uid in sorted((uid for uid in self._map)))
+        return (self.rawMessageByUID(uid) for uid in self.uids())
 
     # returns a path for a uid
-    def path(self, uid):
+    def relpath(self, uid):
         struid = str(uid)
 
         if struid in self._map:
