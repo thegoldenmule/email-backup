@@ -25,7 +25,7 @@ if not os.path.exists(output):
         pass
 
 # append new messages to archive
-with zipfile.ZipFile(output, 'a', compression=zipfile.ZIP_DEFLATED) as z:
+with zipfile.ZipFile(output, 'a', allowZip64=True, compression=zipfile.ZIP_DEFLATED) as z:
     # compare dbs and add
     dirty = False
     for uid in db.uids():
